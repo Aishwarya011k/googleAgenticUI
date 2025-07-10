@@ -67,7 +67,7 @@ const civicData = [
 
 const containerStyle = {
   width: '100%',
-  height: '100%',
+  height: '60vh', // Responsive height for mobile
 };
 
 const defaultCenter = {
@@ -98,35 +98,35 @@ export default function App() {
 
   return (
     <div className="app min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-white via-blue-50 to-blue-100">
-      <aside className="sidebar w-full md:w-80 bg-white/80 backdrop-blur-md shadow-lg rounded-b-3xl md:rounded-3xl m-0 md:m-8 p-6 flex flex-col border border-blue-100">
-        <h2 className="text-2xl font-bold mb-4 text-blue-700 flex items-center gap-2">
+      <aside className="sidebar w-full md:w-80 bg-white/80 backdrop-blur-md shadow-lg rounded-b-3xl md:rounded-3xl m-0 md:m-8 p-4 md:p-6 flex flex-col border border-blue-100 max-h-[40vh] md:max-h-full overflow-y-auto z-10">
+        <h2 className="text-xl md:text-2xl font-bold mb-4 text-blue-700 flex items-center gap-2">
           <span role="img" aria-label="dashboard">📊</span> Bengaluru Dashboard
         </h2>
-        <div className="filters mb-6">
-          <label className="block text-gray-700 font-semibold mb-2">Filter by type:</label>
+        <div className="filters mb-4 md:mb-6">
+          <label className="block text-gray-700 font-semibold mb-2 text-sm md:text-base">Filter by type:</label>
           <select
             onChange={(e) => setFilter(e.target.value)}
             value={filter}
-            className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
+            className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white text-sm md:text-base"
           >
             {allTypes.map((type) => (
               <option key={type} value={type}>{type}</option>
             ))}
           </select>
         </div>
-        <h3 className="text-lg font-semibold mb-2 text-gray-800">Live Feed</h3>
+        <h3 className="text-base md:text-lg font-semibold mb-2 text-gray-800">Live Feed</h3>
         <ul className="space-y-3 overflow-y-auto flex-1 pr-1 custom-scrollbar">
           {filteredData.map((item) => (
             <li
               key={item.id}
-              className="p-3 rounded-xl border-l-4 shadow-sm bg-white/90 hover:bg-blue-50 transition-all border-blue-200"
+              className="p-2 md:p-3 rounded-xl border-l-4 shadow-sm bg-white/90 hover:bg-blue-50 transition-all border-blue-200"
             >
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xl">{typeIcons[item.type]}</span>
-                <span className="font-semibold text-blue-800">{item.title}</span>
+                <span className="text-lg md:text-xl">{typeIcons[item.type]}</span>
+                <span className="font-semibold text-blue-800 text-sm md:text-base">{item.title}</span>
               </div>
-              <div className="text-gray-700 text-sm mb-1">{item.description}</div>
-              <div className="flex justify-between text-xs text-gray-400">
+              <div className="text-gray-700 text-xs md:text-sm mb-1">{item.description}</div>
+              <div className="flex justify-between text-[10px] md:text-xs text-gray-400">
                 <span>{item.type}</span>
                 <span>{item.source}</span>
                 <span>{item.time}</span>
@@ -136,12 +136,18 @@ export default function App() {
         </ul>
       </aside>
 
-      <main className="map-container flex-1 m-0 md:m-8 rounded-3xl overflow-hidden shadow-lg border border-blue-100">
+      <main className="map-container flex-1 m-0 md:m-8 rounded-3xl overflow-hidden shadow-lg border border-blue-100 min-h-[300px] md:min-h-0" style={{ minHeight: '300px' }}>
         <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={defaultCenter}
             zoom={13}
+            options={{
+              gestureHandling: 'greedy',
+              fullscreenControl: false,
+              mapTypeControl: false,
+              streetViewControl: false,
+            }}
           >
             {filteredData.map((marker) => (
               <Marker
@@ -170,12 +176,12 @@ export default function App() {
                 position={{ lat: selected.lat, lng: selected.lng }}
                 onCloseClick={() => setSelected(null)}
               >
-                <div className="p-2 min-w-[180px]">
-                  <h4 className="font-bold text-blue-700 text-base mb-1 flex items-center gap-2">
+                <div className="p-2 min-w-[140px] md:min-w-[180px]">
+                  <h4 className="font-bold text-blue-700 text-sm md:text-base mb-1 flex items-center gap-2">
                     {typeIcons[selected.type]} {selected.title}
                   </h4>
-                  <p className="text-gray-700 mb-1 text-sm">{selected.description}</p>
-                  <div className="flex justify-between text-xs text-gray-400">
+                  <p className="text-gray-700 mb-1 text-xs md:text-sm">{selected.description}</p>
+                  <div className="flex justify-between text-[10px] md:text-xs text-gray-400">
                     <span>{selected.source}</span>
                     <span>{selected.time}</span>
                   </div>
